@@ -1,6 +1,6 @@
 use std::process::exit;
 
-fn is_prime(x: i64) -> bool {
+pub fn is_prime(x: i64) -> bool {
     if x <= 1 { return false; }
     if x == 2 { return true; }
     let mut prime_numbers: Vec<i64> = vec![2];
