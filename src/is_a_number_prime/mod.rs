@@ -1,29 +1,15 @@
-use std::process::exit;
-
-pub fn is_prime(x: i64) -> bool {
-    if x <= 1 { return false; }
-    if x == 2 { return true; }
-    let mut prime_numbers: Vec<i64> = vec![2];
-
-    let root_x = (x as f64).sqrt().ceil() as i64;
-
-    for n in (3..=root_x).step_by(2) {
-        if !divisible_by_any(n, &prime_numbers) {
-            prime_numbers.push(n);
-            if x % n == 0 { return false; }
+pub fn is_prime(n: i64) -> bool {
+    match n {
+        2 | 3 => true,
+        x if x <= 1 => false,
+        x if x % 2 == 0 || x % 3 == 0 => false,
+        _ => {
+            let sqrt_n = ((n as f64).sqrt() as i64) + 1;
+            !(6..=sqrt_n)
+                .step_by(6)
+                .any(|i| n % (i - 1) == 0 || n % (i + 1) == 0)
         }
     }
-
-    return !divisible_by_any(x, &prime_numbers);
-}
-
-fn divisible_by_any(x: i64, primes: &Vec<i64>) -> bool {
-    for prime in primes {
-        if x % prime == 0 {
-            return true;
-        }
-    }
-    return false;
 }
 
 #[cfg(test)]
@@ -59,15 +45,18 @@ mod tests {
         assert!(!is_prime(-5), "-5 is not prime");
         assert!(!is_prime(-8), "-8 is not prime");
         assert!(!is_prime(-41), "-41 is not prime");
+        assert!(!is_prime(1494466603), "1494466603 is not prime");
+        assert!(!is_prime(1021633369), "1021633369 is not prime");
     }
 
     #[test]
     fn large_one() {
         // Takes almost forever
-        // assert!(is_prime(2305843009213693951), "2305843009213693951 is prime");
+        assert!(is_prime(2305843009213693951), "2305843009213693951 is prime");
     }
 
     #[test]
+    #[ignore]
     fn largest() {
         assert!(!is_prime(i64::MAX), "MAX is not prime");
     }
